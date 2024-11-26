@@ -56,13 +56,16 @@ void performKernelTest(int vectorSize, int numberOfRuns)
     }
 
 
-    printf("Verification Sample (first 5 elements):\n");
+    printf("Verification Sample (first 10 elements):\n");
     printf("Index\tX1\tX2\tY1\tY2\tC Result\tASM Result\n");
-    for (int i = 0; i < (vectorSize < 5 ? vectorSize : 5); i++) {
+    for (int i = 0; i < 10; i++) {
+        if (i >= vectorSize) {
+            break;
+        }
         printf("%d\t%.2f\t%.2f\t%.2f\t%.2f\t%.6f\t%.6f\n", 
-               i, x1[i], x2[i], y1[i], y2[i], 
-               z_c[i], z_asm[i]);
-    }
+            i, x1[i], x2[i], y1[i], y2[i], 
+            z_c[i], z_asm[i]);
+        }
 
     // C Kernel Performance Test
     clock_t cTotalTime = 0;
