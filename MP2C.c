@@ -4,8 +4,19 @@
 #include <time.h>
 
 
+extern float asmCalculateDistance(float x1, float x2, float y1, float y2, int n);
 
-void populate_vector(float vector[], int n, float max)
+
+
+
+float cCalculateDistance(float x1, float x2, float y1, float y2)
+{
+    float dx = x1 - x2;
+    float dy = y1 - y2;
+    return sqrtf(dx * dx + dy * dy);
+}
+
+void populateVector(float vector[], int n, float max)
 {
     for (int i = 0; i < n; i++) {
         float value = ((float)rand() / RAND_MAX) * max;
@@ -15,61 +26,103 @@ void populate_vector(float vector[], int n, float max)
     
 }
 
-void display_vector(const char *vectorName, float vec[], int n)
+
+
+void performKernelTest(int vectorSize, int numberOfRuns)
 {
-    int numToDisplay;
-
-    if (n < 5) {
-        numToDisplay = n; 
-    } else {
-        numToDisplay = 5; 
-    }
-
-
-    printf("%s - ", vectorName);
+    float *x1 = malloc(vectorSize * sizeof(float));
+    float *x2 = malloc(vectorSize * sizeof(float));
+    float *y1 = malloc(vectorSize * sizeof(float));
+    float *y2 = malloc(vectorSize * sizeof(float));
+    float *z_c = malloc(vectorSize * sizeof(float));
+    float *z_asm = malloc(vectorSize * sizeof(float));
     
 
+    populateVector(x1, vectorSize, 50.0);
+    populateVector(x2, vectorSize, 50.0);
+    populateVector(y1, vectorSize, 50.0);
+    populateVector(y2, vectorSize, 50.0);
 
-    for (int i = 0; i < numToDisplay; i++) {
-        printf("%.2f", vec[i]);
 
-         if (i < numToDisplay - 1) {
-            printf(", ");
-        }
+
+    // C Kernel Computation
+    for (int i = 0; i < vectorSize; i++) {
+        z_c[i] = cCalculateDistance(x1[i], x2[i], y1[i], y2[i]);
     }
-    printf("\n");
-}
+
+    // Assembly Kernel Computation
+    for (int i = 0; i < vectorSize; i++) {
+        z_asm[i] = asmCalculateDistance(x1[i], x2[i], y1[i], y2[i], i);
+    }
 
 
+    printf("Verification Sample (first 5 elements):\n");
+    printf("Index\tX1\tX2\tY1\tY2\tC Result\tASM Result\n");
+    for (int i = 0; i < (vectorSize < 5 ? vectorSize : 5); i++) {
+        printf("%d\t%.2f\t%.2f\t%.2f\t%.2f\t%.6f\t%.6f\n", 
+               i, x1[i], x2[i], y1[i], y2[i], 
+               z_c[i], z_asm[i]);
+    }
 
-int main()
-{
-    int n;
-    printf("Input Lenght of Vector: ");
-    scanf("%d", &n);
+    // C Kernel Performance Test
+    clock_t cTotalTime = 0;
+    for (int run = 0; run < numberOfRuns; run++)
+    {
+        clock_t start = clock();
+        
+        // C Kernel Computation
+        for (int i = 0; i < vectorSize; i++) {
+            z_c[i] = cCalculateDistance(x1[i], x2[i], y1[i], y2[i]);
+        }
+        
+        clock_t end = clock();
+        cTotalTime += (end - start);
+    }
+    double cAveTime = ((double)cTotalTime / numberOfRuns) / 10000;
 
-    float *x1 = (float *)malloc(n * sizeof(float));
-    float *x2 = (float *)malloc(n * sizeof(float));
-    float *y1 = (float *)malloc(n * sizeof(float));
-    float *y2 = (float *)malloc(n * sizeof(float));
-    float *z = (float *)malloc(n * sizeof(float));
+    // Assembly Kernel Performance Test
+    clock_t asmTotalTime = 0;
+    for (int run = 0; run < numberOfRuns; run++)
+    {
+        clock_t start = clock();
+        
+        // Assembly Kernel Computation
+        for (int i = 0; i < vectorSize; i++) {
+            z_asm[i] = asmCalculateDistance(x1[i], x2[i], y1[i], y2[i], i);
+        }
+        
+        clock_t end = clock();
+        asmTotalTime += (end - start);
+    }
+    double asmAveTime = ((double)asmTotalTime / numberOfRuns) / 10000;
 
-    populate_vector(x1, n, 50.0);
-    populate_vector(x2, n, 50.0);
-    populate_vector(y1, n, 50.0);
-    populate_vector(y2, n, 50.0);
-
-
-    display_vector("X1", x1, n);
-    display_vector("X2", x2, n);
-    display_vector("Y1", y1, n);
-    display_vector("Y2", y2, n);
+    printf("\nVector Size: %d\n", vectorSize);
+    printf("C Kernel - Average Execution Time: %f seconds\n", cAveTime);
+    printf("Assembly Kernel - Average Execution Time: %f seconds\n\n", asmAveTime);
 
     free(x1);
     free(x2);
     free(y1);
     free(y2);
-    free(z);
+    free(z_c);
+    free(z_asm);
+}
+
+int main()
+{
+
+    int numberOfRuns = 30;
+
+
+    int vectorSizes[] = { 1 << 20,1 << 24,  1 << 28  };
+    int numSize = sizeof(vectorSizes) / sizeof(int);    // Get array size
+
+    for (int i = 0; i < numSize; i++)
+    {
+        performKernelTest(vectorSizes[i], numberOfRuns);
+    }
+
+
 
     return 0;
 }
