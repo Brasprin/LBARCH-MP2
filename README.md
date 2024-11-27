@@ -20,25 +20,25 @@ following four vectors:
 
 ### **OBJECTIVES**
 
-1.) Implementation in C and Assembly:<br>
->Develop two separate versions of the program, one in C and   the other in Assembly, to calculate the Euclidean Distance.
+**1.) Implementation in C and Assembly:**<br>
+Develop two separate versions of the program, one in C and   the other in Assembly, to calculate the Euclidean Distance.
 
-2.) Performance Comparison:<br>
->Conduct a detailed comparison of the two implementations by measuring and analyzing their runtime efficiencies.
+**2.) Performance Comparison:**<br>
+Conduct a detailed comparison of the two implementations by measuring and analyzing their runtime efficiencies.
 
-3.) Evaluation of Runtime:<br>
->Measure the runtime of each kernel (C and Assembly) over varying vector sizes to evaluate performance under different computational loads.
+**3.) Evaluation of Runtime:**<br>
+Measure the runtime of each kernel (C and Assembly) over varying vector sizes to evaluate performance under different computational loads.
 
-4.) Averaged Runtime Analysis:<br>
->To ensure accurate and reliable results, each version is executed 30 times, and the average runtime is calculated.
+**4.) Averaged Runtime Analysis:**<br>
+To ensure accurate and reliable results, each version is executed 30 times, and the average runtime is calculated.
 <br>
 
 To explore performance at different computational scales, the program uses three distinct vector sizes:<br>
->1.) 2²⁰ (1,048,576)<br>
+1.) 2²⁰ (1,048,576)<br>
 2.) 2²⁴ (16,777,216)<br>
 3.) 2²⁷ (134,217,728)<br>
 
-Each vector size represents the number of data points processed during computation. This stratification helps in assessing how the 
+Each vector size represents the number of data points processed during computation. This strategy helps in assessing how the 
 implementations scale with increasing workload.<br><br>
 
 
