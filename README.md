@@ -85,19 +85,19 @@ The results reveal how assembly's direct interaction with hardware makes it more
 Several factors account for this difference:<br>
 
 **a.) Direct Hardware Control in Assembly:**<br>
->Assembly allows explicit control over CPU registers, instruction pipelines, and memory operations, minimizing overhead and execution time.<br><br>
+Assembly allows explicit control over CPU registers, instruction pipelines, and memory operations, minimizing overhead and execution time.<br><br>
 
 **b.) Library Dependency in C:**<br>
->C implementations typically depend on standard libraries (e.g., math.h) for functions such as square root and addition. While these libraries 
+C implementations typically depend on standard libraries (e.g., math.h) for functions such as square root and addition. While these libraries 
 offer convenience and portability, they introduce additional layers of abstraction and function calls, which increase execution time. Assembly, 
 on the other hand, avoids such dependencies by implementing computations directly at the instruction level.<br><br>
 
 **c.) Compiler Optimizations in C:**<br>
->While modern C compilers attempt to optimize code for performance, they cannot achieve the level of efficiency provided by assembly. Compilers 
+While modern C compilers attempt to optimize code for performance, they cannot achieve the level of efficiency provided by assembly. Compilers 
 prioritize general-purpose optimization over hardware-specific tuning, which results in slower performance compared to assembly codes.<br><br>
 
 **d.) Scalability and Resource Management:**<br>
->As vector sizes grow, assembly's efficient memory handling and direct data manipulation become more apparent. In contrast, C's reliance on library functions 
+As vector sizes grow, assembly's efficient memory handling and direct data manipulation become more apparent. In contrast, C's reliance on library functions 
 and intermediate abstractions causes a proportional increase in execution time.<br><br>
 
 ### CONCLUSION<br>
